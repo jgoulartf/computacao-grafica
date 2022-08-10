@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinDXUT", "..\..\..\Pictures\Camera Roll\WinDXUT\WinDXUT\WinDXUT.vcxproj", "{53BAC88F-2453-4B7E-AB6B-7E854542755E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DXGI_DXUT", "Aulas\Lab05\DXGI_DXUT\DXGI_DXUT\DXGI_DXUT.vcxproj", "{56CB973A-10CA-43BB-9D9C-CAE5A5A933A1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoopDXUT", "..\..\..\Downloads\Lab04\Lab04\LoopDXUT\LoopDXUT\LoopDXUT.vcxproj", "{CA1F507E-A53E-4ABC-9D85-70FE3DF2E481}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TimerDXUT", "..\..\..\Downloads\Lab04\Lab04\TimerDXUT\TimerDXUT\TimerDXUT.vcxproj", "{A31CC9C5-D52D-4507-A3F1-14B6B4990565}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TimerDXUT", "Aulas\TimerDXUT\TimerDXUT\TimerDXUT.vcxproj", "{A31CC9C5-D52D-4507-A3F1-14B6B4990565}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,22 +15,14 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{53BAC88F-2453-4B7E-AB6B-7E854542755E}.Debug|x64.ActiveCfg = Debug|x64
-		{53BAC88F-2453-4B7E-AB6B-7E854542755E}.Debug|x64.Build.0 = Debug|x64
-		{53BAC88F-2453-4B7E-AB6B-7E854542755E}.Debug|x86.ActiveCfg = Debug|Win32
-		{53BAC88F-2453-4B7E-AB6B-7E854542755E}.Debug|x86.Build.0 = Debug|Win32
-		{53BAC88F-2453-4B7E-AB6B-7E854542755E}.Release|x64.ActiveCfg = Release|x64
-		{53BAC88F-2453-4B7E-AB6B-7E854542755E}.Release|x64.Build.0 = Release|x64
-		{53BAC88F-2453-4B7E-AB6B-7E854542755E}.Release|x86.ActiveCfg = Release|Win32
-		{53BAC88F-2453-4B7E-AB6B-7E854542755E}.Release|x86.Build.0 = Release|Win32
-		{CA1F507E-A53E-4ABC-9D85-70FE3DF2E481}.Debug|x64.ActiveCfg = Debug|x64
-		{CA1F507E-A53E-4ABC-9D85-70FE3DF2E481}.Debug|x64.Build.0 = Debug|x64
-		{CA1F507E-A53E-4ABC-9D85-70FE3DF2E481}.Debug|x86.ActiveCfg = Debug|Win32
-		{CA1F507E-A53E-4ABC-9D85-70FE3DF2E481}.Debug|x86.Build.0 = Debug|Win32
-		{CA1F507E-A53E-4ABC-9D85-70FE3DF2E481}.Release|x64.ActiveCfg = Release|x64
-		{CA1F507E-A53E-4ABC-9D85-70FE3DF2E481}.Release|x64.Build.0 = Release|x64
-		{CA1F507E-A53E-4ABC-9D85-70FE3DF2E481}.Release|x86.ActiveCfg = Release|Win32
-		{CA1F507E-A53E-4ABC-9D85-70FE3DF2E481}.Release|x86.Build.0 = Release|Win32
+		{56CB973A-10CA-43BB-9D9C-CAE5A5A933A1}.Debug|x64.ActiveCfg = Debug|x64
+		{56CB973A-10CA-43BB-9D9C-CAE5A5A933A1}.Debug|x64.Build.0 = Debug|x64
+		{56CB973A-10CA-43BB-9D9C-CAE5A5A933A1}.Debug|x86.ActiveCfg = Debug|Win32
+		{56CB973A-10CA-43BB-9D9C-CAE5A5A933A1}.Debug|x86.Build.0 = Debug|Win32
+		{56CB973A-10CA-43BB-9D9C-CAE5A5A933A1}.Release|x64.ActiveCfg = Release|x64
+		{56CB973A-10CA-43BB-9D9C-CAE5A5A933A1}.Release|x64.Build.0 = Release|x64
+		{56CB973A-10CA-43BB-9D9C-CAE5A5A933A1}.Release|x86.ActiveCfg = Release|Win32
+		{56CB973A-10CA-43BB-9D9C-CAE5A5A933A1}.Release|x86.Build.0 = Release|Win32
 		{A31CC9C5-D52D-4507-A3F1-14B6B4990565}.Debug|x64.ActiveCfg = Debug|x64
 		{A31CC9C5-D52D-4507-A3F1-14B6B4990565}.Debug|x64.Build.0 = Debug|x64
 		{A31CC9C5-D52D-4507-A3F1-14B6B4990565}.Debug|x86.ActiveCfg = Debug|Win32
