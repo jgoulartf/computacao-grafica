@@ -1,13 +1,13 @@
 /**********************************************************************************
-// Engine (Código Fonte)
+// Engine (Cï¿½digo Fonte)
 //
-// Criação:     15 Mai 2014
-// Atualização: 07 Ago 2021
+// Criaï¿½ï¿½o:     15 Mai 2014
+// Atualizaï¿½ï¿½o: 07 Ago 2021
 // Compilador:  Visual C++ 2019
 //
-// Descrição:   A Engine roda aplicações criadas a partir da classe App.
+// Descriï¿½ï¿½o:   A Engine roda aplicaï¿½ï¿½es criadas a partir da classe App.
 //
-//              Para usar a Engine crie uma instância e chame o método
+//              Para usar a Engine crie uma instï¿½ncia e chame o mï¿½todo
 //              Start() com um objeto derivado da classe App.
 //
 **********************************************************************************/
@@ -18,12 +18,12 @@
 using std::stringstream;
 
 // ------------------------------------------------------------------------------
-// Inicialização de variáveis estáticas da classe
+// Inicializaï¿½ï¿½o de variï¿½veis estï¿½ticas da classe
 
-Graphics* Engine::graphics  = nullptr;    // dispositivo gráfico
-Window*   Engine::window    = nullptr;    // janela da aplicação
+Graphics* Engine::graphics  = nullptr;    // dispositivo grï¿½fico
+Window*   Engine::window    = nullptr;    // janela da aplicaï¿½ï¿½o
 Input*    Engine::input     = nullptr;    // dispositivos de entrada
-App*      Engine::app       = nullptr;    // apontadador da aplicação
+App*      Engine::app       = nullptr;    // apontadador da aplicaï¿½ï¿½o
 double    Engine::frameTime = 0.0;        // tempo do quadro atual
 bool      Engine::paused    = false;      // estado do motor
 Timer     Engine::timer;                  // medidor de tempo
@@ -52,25 +52,25 @@ int Engine::Start(App * application)
 {
     app = application;
 
-    // cria janela da aplicação
+    // cria janela da aplicaï¿½ï¿½o
     window->Create();
 
-    // inicializa dispositivos de entrada (deve ser feito após criação da janela)
+    // inicializa dispositivos de entrada (deve ser feito apï¿½s criaï¿½ï¿½o da janela)
     input = new Input();
 
-    // inicializa dispositivo gráfico
+    // inicializa dispositivo grï¿½fico
     graphics->Initialize(window);
 
     // altera a window procedure da janela ativa para EngineProc
     SetWindowLongPtr(window->Id(), GWLP_WNDPROC, (LONG_PTR)EngineProc);
 
-    // ajusta a resolução do Sleep para 1 milisegundo
+    // ajusta a resoluï¿½ï¿½o do Sleep para 1 milisegundo
     // requer uso da biblioteca winmm.lib
     timeBeginPeriod(1);
 
     int exitCode = Loop();
 
-    // volta a resolução do Sleep ao valor original
+    // volta a resoluï¿½ï¿½o do Sleep ao valor original
     timeEndPeriod(1);
 
     return exitCode;
@@ -100,8 +100,8 @@ double Engine::FrameTime()
     if (totalTime >= 1.0)
     {
         stringstream text;            // fluxo de texto para mensagens
-        text << std::fixed;            // sempre mostra a parte fracionária
-        text.precision(3);            // três casas depois da vírgula
+        text << std::fixed;            // sempre mostra a parte fracionï¿½ria
+        text.precision(3);            // trï¿½s casas depois da vï¿½rgula
 
         text << window->Title().c_str() << "    "
             << "FPS: " << frameCount << "    "
@@ -127,13 +127,13 @@ int Engine::Loop()
     // mensagens do Windows
     MSG msg = { 0 };
     
-    // inicialização da aplicação
+    // inicializaï¿½ï¿½o da aplicaï¿½ï¿½o
     app->Init();
 
-    // laço principal
+    // laï¿½o principal
     do
     {
-        // trata todos os eventos antes de atualizar a aplicação
+        // trata todos os eventos antes de atualizar a aplicaï¿½ï¿½o
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
             TranslateMessage(&msg);
@@ -160,10 +160,10 @@ int Engine::Loop()
                 // calcula o tempo do quadro
                 frameTime = FrameTime();
 
-                // atualização da aplicação 
+                // atualizaï¿½ï¿½o da aplicaï¿½ï¿½o 
                 app->Update();
 
-                // desenho da aplicação
+                // desenho da aplicaï¿½ï¿½o
                 app->Draw();
             }
             else
@@ -174,10 +174,10 @@ int Engine::Loop()
 
     } while (msg.message != WM_QUIT);
 
-    // finalização do aplicação
+    // finalizaï¿½ï¿½o do aplicaï¿½ï¿½o
     app->Finalize();    
 
-    // encerra aplicação
+    // encerra aplicaï¿½ï¿½o
     return int(msg.wParam);
 }
 

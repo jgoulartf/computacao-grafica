@@ -46,7 +46,7 @@ void Triangle::Display()
     graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // submete comandos de desenho
-    graphics->CommandList()->DrawInstanced(3, 1, 0, 0);
+    graphics->CommandList()->DrawInstanced(3, 50000, 0, 0);
 
     graphics->Present();    
 }
