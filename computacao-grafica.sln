@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DXGI_DXUT", "Aulas\Lab05\DX
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TimerDXUT", "Aulas\TimerDXUT\TimerDXUT\TimerDXUT.vcxproj", "{A31CC9C5-D52D-4507-A3F1-14B6B4990565}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Triangle", "Aulas\Lab08\Triangle\Triangle\Triangle.vcxproj", "{1DEDDB94-2B74-4664-A1CD-2DEFBA293C63}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Triangle", "Aulas\Triangle\Triangle\Triangle.vcxproj", "{1DEDDB94-2B74-4664-A1CD-2DEFBA293C63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
