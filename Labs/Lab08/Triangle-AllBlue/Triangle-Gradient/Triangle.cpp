@@ -46,7 +46,7 @@ void Triangle::Display()
     graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // submete comandos de desenho
-    graphics->CommandList()->DrawInstanced(3, 50000, 0, 0);
+    graphics->CommandList()->DrawInstanced(6, 1, 0, 0);
 
     graphics->Present();    
 }
@@ -68,15 +68,21 @@ void Triangle::Finalize()
 void Triangle::BuildGeometry()
 {
     // vértices da geometria
-    Vertex vertices[3] =
+    Vertex vertices[6] =
     {
-        { XMFLOAT3(0.0f, 0.5f, 0.0f), XMFLOAT4(Colors::Red) },
-        { XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Orange) },
-        { XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Yellow) }
+        { XMFLOAT3(-0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Red) },
+        { XMFLOAT3(0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Red) },
+        { XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
+        
+        
+        { XMFLOAT3(-0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Red) },
+        { XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
+        { XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) }
+        
     };
 
     // tamanho em bytes dos vértices
-    const uint vbSize = 3 * sizeof(Vertex);
+    const uint vbSize = 6 * sizeof(Vertex);
 
     // cria malha 3D
     geometry = new Mesh("Triangle");
@@ -148,8 +154,8 @@ void Triangle::BuildPipelineState()
     ID3DBlob* vertexShader;
     ID3DBlob* pixelShader;
 
-    D3DReadFileToBlob(L"../x64/Debug/Vertex.cso", &vertexShader);
-    D3DReadFileToBlob(L"../x64/Debug/Pixel.cso", &pixelShader);
+    D3DReadFileToBlob(L"Shaders/Vertex.cso", &vertexShader);
+    D3DReadFileToBlob(L"Shaders/Pixel.cso", &pixelShader);
 
     // --------------------
     // ---- Rasterizer ----
