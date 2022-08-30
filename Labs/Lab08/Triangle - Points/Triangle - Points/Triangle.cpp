@@ -20,7 +20,7 @@ void Triangle::Init()
     // ---------------------------------------
     BuildGeometry();
     BuildRootSignature();
-    BuildPipelineState();        
+    BuildPipelineState();
     // ---------------------------------------
     graphics->SubmitCommands();
 }
@@ -43,12 +43,12 @@ void Triangle::Display()
     // submete comandos de configuração do pipeline
     graphics->CommandList()->SetGraphicsRootSignature(rootSignature);
     graphics->CommandList()->IASetVertexBuffers(0, 1, geometry->VertexBufferView());
-    graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 
     // submete comandos de desenho
-    graphics->CommandList()->DrawInstanced(6, 1, 0, 0);
+    graphics->CommandList()->DrawInstanced(4, 1, 0, 0);
 
-    graphics->Present();    
+    graphics->Present();
 }
 
 // ------------------------------------------------------------------------------
@@ -67,22 +67,18 @@ void Triangle::Finalize()
 
 void Triangle::BuildGeometry()
 {
-    // vértices da geometria, quadrilatero azul
-    Vertex vertices[6] =
+    // vértices da geometria
+    Vertex vertices[4] =
     {
         { XMFLOAT3(-0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
         { XMFLOAT3(0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
         { XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
-        
-        
-        { XMFLOAT3(-0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
-        { XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
-        { XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) }
-        
+        { XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Black) }
+
     };
 
     // tamanho em bytes dos vértices
-    const uint vbSize = 6 * sizeof(Vertex);
+    const uint vbSize = 4 * sizeof(Vertex);
 
     // cria malha 3D
     geometry = new Mesh("Triangle");
@@ -140,7 +136,7 @@ void Triangle::BuildPipelineState()
     // --------------------
     // --- Input Layout ---
     // --------------------
-    
+
     D3D12_INPUT_ELEMENT_DESC inputLayout[2] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -162,8 +158,8 @@ void Triangle::BuildPipelineState()
     // --------------------
 
     D3D12_RASTERIZER_DESC rasterizer = {};
-    //rasterizer.FillMode = D3D12_FILL_MODE_SOLID;
-    rasterizer.FillMode = D3D12_FILL_MODE_WIREFRAME;
+    rasterizer.FillMode = D3D12_FILL_MODE_SOLID;
+    //rasterizer.FillMode = D3D12_FILL_MODE_WIREFRAME;
     rasterizer.CullMode = D3D12_CULL_MODE_BACK;
     rasterizer.FrontCounterClockwise = FALSE;
     rasterizer.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
@@ -208,7 +204,7 @@ void Triangle::BuildPipelineState()
     { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS };
     depthStencil.FrontFace = defaultStencilOp;
     depthStencil.BackFace = defaultStencilOp;
-    
+
     // -----------------------------------
     // --- Pipeline State Object (PSO) ---
     // -----------------------------------
@@ -264,7 +260,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
         delete engine;
         return exit;
     }
-    catch (Error & e)
+    catch (Error& e)
     {
         // exibe mensagem em caso de erro
         MessageBox(nullptr, e.ToString().data(), "Triangle", MB_OK);

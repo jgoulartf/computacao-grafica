@@ -20,7 +20,7 @@ void Triangle::Init()
     // ---------------------------------------
     BuildGeometry();
     BuildRootSignature();
-    BuildPipelineState();        
+    BuildPipelineState();
     // ---------------------------------------
     graphics->SubmitCommands();
 }
@@ -48,7 +48,7 @@ void Triangle::Display()
     // submete comandos de desenho
     graphics->CommandList()->DrawInstanced(6, 1, 0, 0);
 
-    graphics->Present();    
+    graphics->Present();
 }
 
 // ------------------------------------------------------------------------------
@@ -73,12 +73,12 @@ void Triangle::BuildGeometry()
         { XMFLOAT3(-0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Red) },
         { XMFLOAT3(0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Red) },
         { XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
-        
-        
+
+
         { XMFLOAT3(-0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Red) },
         { XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
         { XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) }
-        
+
     };
 
     // tamanho em bytes dos vértices
@@ -140,7 +140,7 @@ void Triangle::BuildPipelineState()
     // --------------------
     // --- Input Layout ---
     // --------------------
-    
+
     D3D12_INPUT_ELEMENT_DESC inputLayout[2] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -162,8 +162,8 @@ void Triangle::BuildPipelineState()
     // --------------------
 
     D3D12_RASTERIZER_DESC rasterizer = {};
-    rasterizer.FillMode = D3D12_FILL_MODE_SOLID;
-    //rasterizer.FillMode = D3D12_FILL_MODE_WIREFRAME;
+    //rasterizer.FillMode = D3D12_FILL_MODE_SOLID;
+    rasterizer.FillMode = D3D12_FILL_MODE_WIREFRAME;
     rasterizer.CullMode = D3D12_CULL_MODE_BACK;
     rasterizer.FrontCounterClockwise = FALSE;
     rasterizer.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
@@ -208,7 +208,7 @@ void Triangle::BuildPipelineState()
     { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS };
     depthStencil.FrontFace = defaultStencilOp;
     depthStencil.BackFace = defaultStencilOp;
-    
+
     // -----------------------------------
     // --- Pipeline State Object (PSO) ---
     // -----------------------------------
@@ -250,7 +250,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
         Engine* engine = new Engine();
         engine->window->Mode(WINDOWED);
         engine->window->Size(600, 600);
-        engine->window->Color(0, 122, 204);
+        engine->window->Color(163, 163, 163);
         engine->window->Title("Triangle");
         engine->window->Icon(IDI_ICON);
         engine->window->Cursor(IDC_CURSOR);
@@ -264,7 +264,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
         delete engine;
         return exit;
     }
-    catch (Error & e)
+    catch (Error& e)
     {
         // exibe mensagem em caso de erro
         MessageBox(nullptr, e.ToString().data(), "Triangle", MB_OK);
