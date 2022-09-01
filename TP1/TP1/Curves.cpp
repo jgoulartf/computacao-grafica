@@ -11,6 +11,8 @@
 
 #include "Curves.h"
 #include <sstream>
+#include <vector>
+using namespace std;
 
 // ------------------------------------------------------------------------------
 
@@ -41,45 +43,34 @@ void Curves::Update()
         count = 0;
     }
 
-
     // cria vértices com o botão do mouse
     if (input->KeyPress(VK_LBUTTON))
     {
-        float cx = float(window->CenterX());
-        float cy = float(window->CenterY());
-        float mx = float(input->MouseX());
-        float my = float(input->MouseY());
-        
-        // converte as coordenadas da tela para a faixa -1.0 a 1.0
-        // cy e my foram invertidos para levar em consideração que 
-        // o eixo y da tela cresce na direção oposta do cartesiano
-        float x = (mx - cx) / cx;
-        float y = (cy - my) / cy;
 
-        // Pinta de amarelo depois de 10 vertices
-        
-        if (count < 10)
-            vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
-        else
-            for (int i = 0; i < count; i++) {
-                vertices[i] = { XMFLOAT3(vertices[i].Pos.x, vertices[i].Pos.y, 0.0f), XMFLOAT4(Colors::Yellow) };
-            }
-        vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
-        
-        index = (index + 1) % MaxVertex;
-        
-        if (count < MaxVertex)
-            ++count;
-
+        wstringstream s;
+        int nv = 0;
+        while (vertices[nv].Pos.x != 0) {
+            nv++;
+        }
+        //s << "\n\n" << "Quantidade de vertices: " << sizeof(vertices) / sizeof(vertices[0]) << "\n\n";
+        s << nv;
+        OutputDebugStringW(s.str().c_str());
+        MarkVertice();
     }
-        // copia vértices para o armazenamento local da malha
-        graphics->Copy(vertices, geometry->vertexBufferSize, geometry->vertexBufferCPU);
 
-        // copia vértices para o buffer da GPU usando o buffer de Upload
-        graphics->ResetCommands();
-        graphics->Copy(vertices, geometry->vertexBufferSize, geometry->vertexBufferUpload, geometry->vertexBufferGPU);
-        graphics->SubmitCommands();
-        Display();
+    // Gera uma iteração do algoritmo de Chaikin
+    if (input->KeyPress(VK_RETURN)) {
+        Chaikin();
+    }
+
+    // copia vértices para o armazenamento local da malha
+    graphics->Copy(vertices, geometry->vertexBufferSize, geometry->vertexBufferCPU);
+
+    // copia vértices para o buffer da GPU usando o buffer de Upload
+    graphics->ResetCommands();
+    graphics->Copy(vertices, geometry->vertexBufferSize, geometry->vertexBufferUpload, geometry->vertexBufferGPU);
+    graphics->SubmitCommands();
+    Display();
 }
 
 // ------------------------------------------------------------------------------
@@ -262,8 +253,87 @@ void Curves::BuildPipelineState()
 
 // ------------------------------------------------------------------------------
 
+void Curves::MarkVertice(){
 
+    float cx = float(window->CenterX());
+    float cy = float(window->CenterY());
+    float mx = float(input->MouseX());
+    float my = float(input->MouseY());
 
+    // converte as coordenadas da tela para a faixa -1.0 a 1.0
+    // cy e my foram invertidos para levar em consideração que 
+    // o eixo y da tela cresce na direção oposta do cartesiano
+    float x = (mx - cx) / cx;
+    float y = (cy - my) / cy;
+
+    // Pinta de amarelo depois de 10 vertices
+
+    if (count < 10)
+        vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
+    else
+        for (int i = 0; i < count; i++) {
+            vertices[i] = { XMFLOAT3(vertices[i].Pos.x, vertices[i].Pos.y, 0.0f), XMFLOAT4(Colors::Yellow) };
+        }
+    vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
+
+    index = (index + 1) % MaxVertex;
+
+    if (count < MaxVertex)
+        ++count;
+}
+
+// ------------------------------------------------------------------------------
+
+void Curves::Chaikin() {
+    float px1, py1, px2, py2;
+    int n = (2 * count) - 2;
+
+    vector<Vertex> newVertices;
+    wstringstream s;
+    /*
+    s << "n:" << n;
+    OutputDebugStringW(s.str().c_str());
+    */
+    for (int i = 0; i < count - 1; i++) {
+        
+        // Gerando dois pontos a partir de um segmento de reta.
+        // Ponto 1
+        px1 = ((3.0f / 4.0f) * vertices[i].Pos.x) + ((1.0f / 4.0f) * vertices[i + 1].Pos.x);
+        py1 = ((3.0f / 4.0f) * vertices[i].Pos.y) + ((1.0f / 4.0f) * vertices[i + 1].Pos.y);
+        
+        // Adicionando ao vetor de vertices
+        if (count < 10)
+            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::White) });
+        else
+            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::Yellow) });
+
+        px2 = ((1.0f / 4.0f) * vertices[i].Pos.x) + ((3.0f / 4.0f) * vertices[i + 1].Pos.x);
+        py2 = ((1.0f / 4.0f) * vertices[i].Pos.y) + ((3.0f / 4.0f) * vertices[i + 1].Pos.y);
+
+        // Adicionando ao vetor de vertices
+        if (count < 10)
+            newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::White) });
+        else
+            newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::Yellow) });
+
+    }
+
+    for (int i = 0; i < newVertices.size(); i++) {
+        vertices[i] = newVertices.at(i);
+    }
+
+    int nv = 0;
+    while (vertices[nv].Pos.x != 0) {
+        nv++;
+    }
+    //s << "\n\n" << "Quantidade de vertices: " << sizeof(vertices) / sizeof(vertices[0]) << "\n\n";
+    s << "\n\nn vertices: " << nv;
+    s << "\n\n";
+    OutputDebugStringW(s.str().c_str());
+
+}
+
+// ------------------------------------------------------------------------------
 
 
 // ------------------------------------------------------------------------------

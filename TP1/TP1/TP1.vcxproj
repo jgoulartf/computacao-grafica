@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{6ea1318b-7358-4fd0-bfba-53db11a231aa}</ProjectGuid>
+    <ProjectGuid>{7386E8C2-F4AC-4111-B56A-FD65A9E2BACD}</ProjectGuid>
     <RootNamespace>Curves</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

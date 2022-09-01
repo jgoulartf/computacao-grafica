@@ -51,7 +51,8 @@ public:
     void BuildGeometry();
     void BuildRootSignature();
     void BuildPipelineState();
-    void clearVertices();
+    void MarkVertice();
+    void Chaikin();
 };
 
 // ------------------------------------------------------------------------------
