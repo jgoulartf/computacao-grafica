@@ -1,20 +1,24 @@
 /**********************************************************************************
 // Triangle (Código Fonte)
 //
-// Criação:     22 Jul 2020
-// Atualização: 14 Ago 2021
+// Criação:     12 Ago 2020
+// Atualização: 17 Ago 2020
 // Compilador:  Visual C++ 2019
 //
-// Descrição:   Constrói um Triângulo usando o Direct3D 12
+// Descrição:   Constrói curvas usando corner-cutting no Direct3D 12
 //
 **********************************************************************************/
 
-#include "Triangle.h"
+#include "Curves.h"
+#include <sstream>
 
 // ------------------------------------------------------------------------------
 
-void Triangle::Init()
+void Curves::Init()
 {
+    count = 0;
+    index = 0;
+
     // contrói geometria e inicializa pipeline
     graphics->ResetCommands();
     // ---------------------------------------
@@ -27,33 +31,81 @@ void Triangle::Init()
 
 // ------------------------------------------------------------------------------
 
-void Triangle::Update()
+void Curves::Update()
 {
     // sai com o pressionamento da tecla ESC
     if (input->KeyPress(VK_ESCAPE))
         window->Close();
+
+    // Reinicia vertices para o inicio do array
+    if (input->KeyPress(VK_DELETE)) {
+        index = 0;
+        count = 0;
+    }
+
+
+    // cria vértices com o botão do mouse
+    if (input->KeyPress(VK_LBUTTON))
+    {
+        float cx = float(window->CenterX());
+        float cy = float(window->CenterY());
+        float mx = float(input->MouseX());
+        float my = float(input->MouseY());
+        
+        // converte as coordenadas da tela para a faixa -1.0 a 1.0
+        // cy e my foram invertidos para levar em consideração que 
+        // o eixo y da tela cresce na direção oposta do cartesiano
+        float x = (mx - cx) / cx;
+        float y = (cy - my) / cy;
+
+        // Pinta de amarelo depois de 10 vertices
+        
+        if (count < 10)
+            vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
+        else
+            for (int i = 0; i < count; i++) {
+                vertices[i] = { XMFLOAT3(vertices[i].Pos.x, vertices[i].Pos.y, 0.0f), XMFLOAT4(Colors::Yellow) };
+            }
+        vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
+        
+        index = (index + 1) % MaxVertex;
+        
+        if (count < MaxVertex)
+            ++count;
+
+    }
+        // copia vértices para o armazenamento local da malha
+        graphics->Copy(vertices, geometry->vertexBufferSize, geometry->vertexBufferCPU);
+
+        // copia vértices para o buffer da GPU usando o buffer de Upload
+        graphics->ResetCommands();
+        graphics->Copy(vertices, geometry->vertexBufferSize, geometry->vertexBufferUpload, geometry->vertexBufferGPU);
+        graphics->SubmitCommands();
+        Display();
 }
 
 // ------------------------------------------------------------------------------
 
-void Triangle::Display()
+void Curves::Display()
 {
+    // limpa backbuffer
     graphics->Clear(pipelineState);
 
     // submete comandos de configuração do pipeline
     graphics->CommandList()->SetGraphicsRootSignature(rootSignature);
     graphics->CommandList()->IASetVertexBuffers(0, 1, geometry->VertexBufferView());
-    graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
     // submete comandos de desenho
-    graphics->CommandList()->DrawInstanced(6, 1, 0, 0);
+    graphics->CommandList()->DrawInstanced(count, 1, 0, 0);
 
+    // apresenta backbuffer
     graphics->Present();    
 }
 
 // ------------------------------------------------------------------------------
 
-void Triangle::Finalize()
+void Curves::Finalize()
 {
     rootSignature->Release();
     pipelineState->Release();
@@ -65,47 +117,24 @@ void Triangle::Finalize()
 //                                     D3D                                      
 // ------------------------------------------------------------------------------
 
-void Triangle::BuildGeometry()
+void Curves::BuildGeometry()
 {
-    // vértices da geometria, quadrilatero azul
-    Vertex vertices[6] =
-    {
-        { XMFLOAT3(-0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
-        { XMFLOAT3(0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
-        { XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
-        
-        
-        { XMFLOAT3(-0.5f, 0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
-        { XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) },
-        { XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) }
-        
-    };
-
-    // tamanho em bytes dos vértices
-    const uint vbSize = 6 * sizeof(Vertex);
-
     // cria malha 3D
-    geometry = new Mesh("Triangle");
+    geometry = new Mesh("Curve");
 
     // ajusta atributos da malha 3D
     geometry->vertexByteStride = sizeof(Vertex);
-    geometry->vertexBufferSize = vbSize;
+    geometry->vertexBufferSize = MaxVertex * sizeof(Vertex);
 
     // aloca recursos para o vertex buffer
-    graphics->Allocate(vbSize, &geometry->vertexBufferCPU);
-    graphics->Allocate(UPLOAD, vbSize, &geometry->vertexBufferUpload);
-    graphics->Allocate(GPU, vbSize, &geometry->vertexBufferGPU);
-
-    // copia vértices para o armazenamento local da malha
-    graphics->Copy(vertices, vbSize, geometry->vertexBufferCPU);
-
-    // copia vértices para o buffer da GPU usando o buffer de Upload
-    graphics->Copy(vertices, vbSize, geometry->vertexBufferUpload, geometry->vertexBufferGPU);
+    graphics->Allocate(geometry->vertexBufferSize, &geometry->vertexBufferCPU);
+    graphics->Allocate(UPLOAD, geometry->vertexBufferSize, &geometry->vertexBufferUpload);
+    graphics->Allocate(GPU, geometry->vertexBufferSize, &geometry->vertexBufferGPU);
 }
 
 // ------------------------------------------------------------------------------
 
-void Triangle::BuildRootSignature()
+void Curves::BuildRootSignature()
 {
     // descrição para uma assinatura vazia
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc = {};
@@ -135,7 +164,7 @@ void Triangle::BuildRootSignature()
 
 // ------------------------------------------------------------------------------
 
-void Triangle::BuildPipelineState()
+void Curves::BuildPipelineState()
 {
     // --------------------
     // --- Input Layout ---
@@ -162,9 +191,8 @@ void Triangle::BuildPipelineState()
     // --------------------
 
     D3D12_RASTERIZER_DESC rasterizer = {};
-    rasterizer.FillMode = D3D12_FILL_MODE_SOLID;
-    //rasterizer.FillMode = D3D12_FILL_MODE_WIREFRAME;
-    rasterizer.CullMode = D3D12_CULL_MODE_BACK;
+    rasterizer.FillMode = D3D12_FILL_MODE_WIREFRAME;
+    rasterizer.CullMode = D3D12_CULL_MODE_NONE;
     rasterizer.FrontCounterClockwise = FALSE;
     rasterizer.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
     rasterizer.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
@@ -222,7 +250,7 @@ void Triangle::BuildPipelineState()
     pso.RasterizerState = rasterizer;
     pso.DepthStencilState = depthStencil;
     pso.InputLayout = { inputLayout, 2 };
-    pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
     pso.NumRenderTargets = 1;
     pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
     pso.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -234,31 +262,34 @@ void Triangle::BuildPipelineState()
     pixelShader->Release();
 }
 
+// ------------------------------------------------------------------------------
+
+
+
+
 
 // ------------------------------------------------------------------------------
 //                                  WinMain                                      
 // ------------------------------------------------------------------------------
 
-int APIENTRY WinMain(_In_ HINSTANCE hInstance,
-    _In_opt_ HINSTANCE hPrevInstance,
-    _In_ LPSTR lpCmdLine,
-    _In_ int nCmdShow)
+int APIENTRY WinMain(_In_ HINSTANCE hInstance,    _In_opt_ HINSTANCE hPrevInstance,
+                     _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
     try
     {
         // cria motor e configura a janela
         Engine* engine = new Engine();
         engine->window->Mode(WINDOWED);
-        engine->window->Size(600, 600);
-        engine->window->Color(163, 163, 163);
-        engine->window->Title("Triangle");
+        engine->window->Size(1024, 600);
+        engine->window->Color(0, 122, 204);
+        engine->window->Title("Curves");
         engine->window->Icon(IDI_ICON);
         engine->window->Cursor(IDC_CURSOR);
         engine->window->LostFocus(Engine::Pause);
         engine->window->InFocus(Engine::Resume);
 
         // cria e executa a aplicação
-        int exit = engine->Start(new Triangle());
+        int exit = engine->Start(new Curves());
 
         // finaliza execução
         delete engine;
@@ -267,10 +298,9 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
     catch (Error & e)
     {
         // exibe mensagem em caso de erro
-        MessageBox(nullptr, e.ToString().data(), "Triangle", MB_OK);
+        MessageBox(nullptr, e.ToString().data(), "Curves", MB_OK);
         return 0;
     }
 }
 
 // ----------------------------------------------------------------------------
-
