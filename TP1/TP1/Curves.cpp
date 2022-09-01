@@ -28,9 +28,7 @@ void Curves::Init()
     // ---------------------------------------
     graphics->SubmitCommands();
 }
-
 // ------------------------------------------------------------------------------
-
 void Curves::Update()
 {
     // sai com o pressionamento da tecla ESC
