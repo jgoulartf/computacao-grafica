@@ -271,7 +271,7 @@ void Curves::MarkVertice(){
     if (count < 10)
         vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
     else
-        for (int i = 0; i < count; i++) {
+        for (uint i = 0; i < count; i++) {
             vertices[i] = { XMFLOAT3(vertices[i].Pos.x, vertices[i].Pos.y, 0.0f), XMFLOAT4(Colors::Yellow) };
         }
     vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
@@ -281,7 +281,6 @@ void Curves::MarkVertice(){
     if (count < MaxVertex)
         ++count;
 }
-
 // ------------------------------------------------------------------------------
 
 void Curves::Chaikin() {
@@ -294,7 +293,7 @@ void Curves::Chaikin() {
     s << "n:" << n;
     OutputDebugStringW(s.str().c_str());
     */
-    for (int i = 0; i < count - 1; i++) {
+    for (uint i = 0; i < count - 1; i++) {
         
         // Gerando dois pontos a partir de um segmento de reta.
         // Ponto 1
@@ -318,18 +317,17 @@ void Curves::Chaikin() {
 
     }
 
-    for (int i = 0; i < newVertices.size(); i++) {
-        vertices[i] = newVertices.at(i);
-    }
+    copy(newVertices.begin(), newVertices.end(), vertices);
 
-    int nv = 0;
-    while (vertices[nv].Pos.x != 0) {
-        nv++;
-    }
     //s << "\n\n" << "Quantidade de vertices: " << sizeof(vertices) / sizeof(vertices[0]) << "\n\n";
-    s << "\n\nn vertices: " << nv;
-    s << "\n\n";
+    s << "\n\nnewVertices size: " << newVertices.size();
+    for (int i = 0; i < newVertices.size(); i++) {
+        s << "[" << i << "] - (x, y) = (" << newVertices.at(i).Pos.x << "," << newVertices.at(i).Pos.y << ")";
+        s << "\n";
+        s << "\n\n";
+    }
     OutputDebugStringW(s.str().c_str());
+    count = n;
 
 }
 
