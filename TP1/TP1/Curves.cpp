@@ -46,21 +46,16 @@ void Curves::Update()
     // cria vértices com o botão do mouse
     if (input->KeyPress(VK_LBUTTON))
     {
-
-        wstringstream s;
-        int nv = 0;
-        while (vertices[nv].Pos.x != 0) {
-            nv++;
-        }
-        //s << "\n\n" << "Quantidade de vertices: " << sizeof(vertices) / sizeof(vertices[0]) << "\n\n";
-        s << nv;
-        OutputDebugStringW(s.str().c_str());
         MarkVertice();
     }
 
     // Gera uma iteração do algoritmo de Chaikin
     if (input->KeyPress(VK_RETURN)) {
-        Chaikin();
+        if ((count * 2) - 2 < 1024)
+            Chaikin();
+        else
+            for(int i = 0; i < count; i++)
+                vertices[i] = { XMFLOAT3(vertices[i].Pos.x, vertices[i].Pos.y, 0.0f), XMFLOAT4(Colors::Yellow) };
     }
 
     // copia vértices para o armazenamento local da malha
@@ -268,14 +263,8 @@ void Curves::MarkVertice(){
 
     // Pinta de amarelo depois de 10 vertices
 
-    if (count < 10)
-        vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
-    else
-        for (uint i = 0; i < count; i++) {
-            vertices[i] = { XMFLOAT3(vertices[i].Pos.x, vertices[i].Pos.y, 0.0f), XMFLOAT4(Colors::Yellow) };
-        }
-    vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
-
+    vertices[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::Yellow) };
+   
     index = (index + 1) % MaxVertex;
 
     if (count < MaxVertex)
@@ -289,10 +278,7 @@ void Curves::Chaikin() {
 
     vector<Vertex> newVertices;
     wstringstream s;
-    /*
-    s << "n:" << n;
-    OutputDebugStringW(s.str().c_str());
-    */
+   
     for (uint i = 0; i < count - 1; i++) {
         
         // Gerando dois pontos a partir de um segmento de reta.
@@ -300,35 +286,60 @@ void Curves::Chaikin() {
         px1 = ((3.0f / 4.0f) * vertices[i].Pos.x) + ((1.0f / 4.0f) * vertices[i + 1].Pos.x);
         py1 = ((3.0f / 4.0f) * vertices[i].Pos.y) + ((1.0f / 4.0f) * vertices[i + 1].Pos.y);
         
-        // Adicionando ao vetor de vertices
-        if (count < 10)
-            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::White) });
-        else
-            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::Yellow) });
-
+        // Ponto 2
         px2 = ((1.0f / 4.0f) * vertices[i].Pos.x) + ((3.0f / 4.0f) * vertices[i + 1].Pos.x);
         py2 = ((1.0f / 4.0f) * vertices[i].Pos.y) + ((3.0f / 4.0f) * vertices[i + 1].Pos.y);
 
-        // Adicionando ao vetor de vertices
-        if (count < 10)
+        // Selecionando cor para pintar, a depender da iteração
+        switch (chaikinIt) {
+        case 0:
+            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::GreenYellow) });
+            newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::GreenYellow) });
+            break;
+        case 1:
+            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::Blue) });
+            newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::Blue) });
+            break;
+        case 2:
+            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::Black) });
+            newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::Black) });
+            break;
+        case 3:
+            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::Red) });
+            newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::Red) });
+            break;
+        case 4:
+            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::Cyan) });
+            newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::Cyan) });
+            break;
+        case 5:
+            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::Magenta) });
+            newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::Magenta) });
+            break;
+        case 6:
+            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::Purple) });
+            newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::Purple) });
+            break;
+        case 7:
+            newVertices.push_back({ XMFLOAT3(px1, py1, 0.0f), XMFLOAT4(Colors::White) });
             newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::White) });
-        else
-            newVertices.push_back({ XMFLOAT3(px2, py2, 0.0f), XMFLOAT4(Colors::Yellow) });
-
+            break;
+        default:
+            break;
+        }
     }
 
     copy(newVertices.begin(), newVertices.end(), vertices);
-
-    //s << "\n\n" << "Quantidade de vertices: " << sizeof(vertices) / sizeof(vertices[0]) << "\n\n";
-    s << "\n\nnewVertices size: " << newVertices.size();
+    chaikinIt++;
+    s << "\n\n" << "Quantidade de vertices: " << newVertices.size() << "\n\n";
+    /*s << "\n\nnewVertices size: " << newVertices.size();
     for (int i = 0; i < newVertices.size(); i++) {
         s << "[" << i << "] - (x, y) = (" << newVertices.at(i).Pos.x << "," << newVertices.at(i).Pos.y << ")";
         s << "\n";
         s << "\n\n";
-    }
+    }*/
     OutputDebugStringW(s.str().c_str());
     count = n;
-
 }
 
 // ------------------------------------------------------------------------------
@@ -347,7 +358,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,    _In_opt_ HINSTANCE hPrevInstan
         Engine* engine = new Engine();
         engine->window->Mode(WINDOWED);
         engine->window->Size(1024, 600);
-        engine->window->Color(0, 122, 204);
+        engine->window->Color(150, 150, 150);
         engine->window->Title("Curves");
         engine->window->Icon(IDI_ICON);
         engine->window->Cursor(IDC_CURSOR);

@@ -16,7 +16,6 @@
 #include <D3DCompiler.h>
 #include <DirectXMath.h>
 #include <DirectXColors.h>
-#include <list>
 using namespace DirectX;
 using namespace std;
 
@@ -29,7 +28,6 @@ struct Vertex
 };
 
 // ------------------------------------------------------------------------------
-
 class Curves : public App
 {
 private:
@@ -41,6 +39,8 @@ private:
     Vertex vertices[MaxVertex];
     uint count;
     uint index;
+
+    uint chaikinIt;
 
 public:
     void Init();
