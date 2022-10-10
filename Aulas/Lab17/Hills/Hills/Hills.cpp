@@ -117,7 +117,7 @@ void Hills::Update()
     XMStoreFloat4x4(&View, view);
 
     // constrói matriz combinada (world x view x proj)
-    XMMATRIX world = XMMatrixRotationY(float(timer.Elapsed()));
+    XMMATRIX world = XMMatrixRotationY(float(timer.Elapsed()) - 2);
     XMMATRIX proj = XMLoadFloat4x4(&Proj);
     XMMATRIX WorldViewProj = world * view * proj;
 
@@ -298,7 +298,11 @@ void Hills::BuildGeometry()
         float x = grid.vertices[i].pos.x;
         float z = grid.vertices[i].pos.z;
 
-        grid.vertices[i].pos.y = 0.3f * (z * sinf(0.1f * x) + x * cosf(0.1f * z));
+        float A = 50.0f;
+        float B = 10000.0f;
+
+        //grid.vertices[i].pos.y = 0.3f * (z * sinf(0.1f * x) + x * cosf(0.1f * z));
+        grid.vertices[i].pos.y = A * sinf(sqrt( (B * pow(x, 2)) + (B * pow(z, 2)) )) / sqrt((B * pow(x, 2)) + (B * pow(z, 2)));
 
         if (grid.vertices[i].pos.y < -10.0f)
         {

@@ -301,8 +301,13 @@ Sphere::Sphere(float radius, uint sliceCount, uint stackCount)
             v.pos.y = radius * cosf(phi);
             v.pos.z = radius * sinf(phi) * sinf(theta);
 
-            v.color = XMFLOAT4(Colors::Yellow);
+            if (i % 2 != 0) {
+                v.color = XMFLOAT4(Colors::Blue);
+            }
+            else {
 
+                v.color = XMFLOAT4(Colors::Red);
+            }
             vertices.push_back(v);
         }
     }
@@ -368,7 +373,7 @@ GeoSphere::GeoSphere(float radius, uint subdivisions)
     type = GEOSPHERE_T;
 
     // limita o número de subdivisões
-    subdivisions = (subdivisions > 6U ? 6U : subdivisions);
+    //subdivisions = (subdivisions > 6U ? 6U : subdivisions);
 
     // aproxima uma esfera pela subdivisão de um icosaédro
     const float X = 0.525731f;
@@ -415,7 +420,9 @@ GeoSphere::GeoSphere(float radius, uint subdivisions)
         XMVECTOR p = radius * n;
 
         XMStoreFloat3(&vertices[i].pos, p);
+        
         vertices[i].color = XMFLOAT4(Colors::Yellow);
+        
     }
 }
 

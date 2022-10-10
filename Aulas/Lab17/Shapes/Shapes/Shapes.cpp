@@ -274,16 +274,16 @@ void Shapes::BuildRootSignature()
 
 void Shapes::BuildGeometry()
 {
-    Box geom(2.0f, 2.0f, 2.0f);
+    //Box geom(2.0f, 2.0f, 2.0f);
     //Cylinder geom(1.0f, 0.5f, 3.0f, 20, 20);
-    //Sphere geom(1.0f, 20, 20);
-    //GeoSphere geom(1.0f, 2);
-    //Grid geom(3.0f, 3.0f, 20, 20);
+    //Sphere geom(2.0f, 100, 100);
+    //GeoSphere geom(1.0f, 10);
+    Grid geom(3.0f, 3.0f, 20, 20);
     //Quad geom(3.0f, 3.0f);
 
-    // --------------
-    // >> Malha 3D <<
-    // --------------
+    // |----------------|
+    // |>>> Malha 3D <<<|
+    // |----------------|
 
     // tamanho em bytes dos vértices e índices
     const uint vbSize = geom.VertexCount() * sizeof(Vertex);
